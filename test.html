@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    <input
+      type="text"
+      oninput="validateInputCategoryName(event)"
+      onpaste="validateInputCategoryName(event)"
+      id="category_name"
+      style="width: 100%"
+    />
+  </body>
+</html>
+<script language="JavaScript">
+  let countValidateCategoryName = 0;
+  let arrayLineCategoryName = [];
+
+  function checkInputCategoryNo(input) {
+    if (input.value.length > input.maxLength) {
+      input.value = input.value.slice(0, input.maxLength);
+    }
+  }
+
+  function validateInputCategoryName(event) {
+    var input = event.data;
+    var currentValue = event.target.value;
+    var arrayLineCategoryName = currentValue.split("@");
+
+    function isSingleByte(character) {
+      let characterTemp = character;
+      let countByte = 0;
+      for (let i = 0; i < characterTemp.length; i++) {
+        countByte += characterTemp[i].charCodeAt(0) <= 0x7f ? 1 : 2;
+      }
+      return countByte;
+    }
+
+    function truncateToBytes(str, maxBytes) {
+      let bytes = 0;
+      let truncatedStr = "";
+
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        const charByteSize = char.charCodeAt(0) <= 0x7f ? 1 : 2;
+
+        if (bytes + charByteSize > maxBytes) {
+          break;
+        }
+
+        truncatedStr += char;
+        bytes += charByteSize;
+      }
+
+      return truncatedStr;
+    }
+
+    var atCount = (currentValue.match(/@/g) || []).length;
+
+    if (input === "@") {
+      if (atCount >= 3) {
+        strtmp = currentValue.slice(0, currentValue.length - 1);
+        document.getElementById("category_name").value = strtmp;
+      }
+    }
+
+    for (let i = 0; i < arrayLineCategoryName.length; i++) {
+      let arr = arrayLineCategoryName[i];
+      let count = isSingleByte(arr);
+      if (count > 10) {
+        arrayLineCategoryName[i] = truncateToBytes(arr, 10);
+      }
+    }
+
+    document.getElementById("category_name").value =
+      arrayLineCategoryName.join("@");
+  }
+</script>

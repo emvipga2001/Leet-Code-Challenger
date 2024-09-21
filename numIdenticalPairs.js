@@ -1,0 +1,16 @@
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var numIdenticalPairs = function(nums) {
+    let map = {}, count = 0;
+    for (let num of nums) {
+        if (map[num]) {
+            count += map[num];
+            map[num] += 1;
+        } else map[num] = 1;
+    }
+    return count;
+};
+
+numIdenticalPairs([1,2,3,1,1,3])
