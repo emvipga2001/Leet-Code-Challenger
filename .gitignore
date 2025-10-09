@@ -1,0 +1,7 @@
+.venv
+*.py
+*.html
+*.spec
+
+build
+dist
